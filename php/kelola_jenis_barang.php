@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['action'] == 'update') {
-    $kodeJenis = $_POST['kodeJenis'];
+    $kodeJenis = $_POST['idJenis'];
     $jenis = $_POST['jenis'];
     $keterangan = $_POST['keterangan'];
 

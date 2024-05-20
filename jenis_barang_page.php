@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jenis Barang</title>
-    <!-- Bootstrap JS and dependencies -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Lavanderia Inventory System - Jenis Barang</title>
+     <!-- Bootstrap JS and dependencies -->
+     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -17,7 +17,7 @@
     <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="styles/style.css">
     <style>
-         .table-wrapper {
+        .table-wrapper {
             margin: 20px;
             padding: 20px;
             background-color: #ffffff;
@@ -44,49 +44,12 @@
         }
 
         /* Modal styles */
-        .modal {
-            display: none; /* Hide modal by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4); /* Black background with opacity */
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 3% auto; /* 10% from the top and centered */
-            padding: 20px;
-            border: 1px solid #888;
-            border-radius: 15px;
-            overflow: auto;
-            width: 30%; /* Could be more or less, depending on screen size */
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
         .modal-header {
-            padding: 0px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #e5e5e5;
-            padding-bottom: 16px;
-            text-align: left;
+            padding-bottom: 10px;
         }
 
         .modal-header h2 {
@@ -95,57 +58,19 @@
         }
 
         .modal-body {
-            padding: 10px 0;
+            padding: 32px 0;
+            margin: 8px 18px;
         }
 
         .modal-footer {
             display: flex;
             justify-content: flex-end;
-            padding-top: 100px;
+            padding-top: 10px;
             border-top: 1px solid #e5e5e5;
         }
 
-        #addButton {
-            padding: 10px 20px;
-            background-color: #2D8DFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        #addButton:hover {
-            background-color: #555;
-        }
-
-        #saveButton, #updateSaveButton {
-            padding: 10px 20px;
-            background-color: #2D8DFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-right: 10px;
-        }
-
-        #saveButton, #updateSaveButton:hover {
-            background-color: #0056b3;
-        }
-
-        #cancelButton, #updateCancelButton {
-            padding: 10px 20px;
-            background-color: #D9D9D9;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        #cancelButton, #updateCancelButton:hover {
-            background-color: #5a6268;
+        .modal-footer button {
+            margin-left: 10px;
         }
 
         input[type="text"],
@@ -158,7 +83,6 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
-
     </style>
 </head>
 <body>
@@ -211,7 +135,6 @@
                     </li>
                 </ul>
             </div>
-            
         </aside>
         <!-- Main Content -->
         <div class="main">
@@ -227,10 +150,10 @@
                     <div class="col-12">
                         <div class="table-wrapper">
                             <div class="table-header">
-                                    <h3>Data Jenis Barang</h3>
-                                    <button id="addButton" class="btn btn-primary">Tambah Data +</button>
+                                <h3>Data Jenis Barang</h3>
+                                <button id="addButton" class="btn btn-primary">Tambah Data +</button>
                             </div>
-                                <hr>
+                            <hr>
                             <div class="d-flex justify-content-between mb-3">
                                 <div>
                                     <label>Show 
@@ -284,63 +207,82 @@
 
     <!-- The Modal -->
     <!-- Tambah Data Pop Up -->
-    <div id="addModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Tambah Jenis</h2>
-                <span class="close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="tambahJenisForm">
-                    <label for="jenis">Jenis <span style="color: red;">*</span></label>
-                    <input type="text" id="jenis" name="jenis" required>
-
-                    <label for="keterangan">Keterangan <span style="color: red;">*</span></label>
-                    <textarea id="keterangan" name="keterangan" rows="4" required></textarea>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button id="saveButton" type="button">Simpan</button>
-                <button id="cancelButton" type="button" class="close">Batal</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit Data Modal -->
-    <div id="updateModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Update Jenis</h2>
-                <span class="close" onclick="closeModal('updateModal')">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="updateJenisForm">
-                    <label for="updateKodeJenis">Kode Jenis</label>
-                    <input type="text" id="updateKodeJenis" name="kodeJenis" readonly style="background-color: #d3d3d3;">
-
-                    <label for="updateJenis">Jenis <span style="color: red;">*</span></label>
-                    <input type="text" id="updateJenis" name="jenis" required>
-
-                    <label for="updateKeterangan">Keterangan <span style="color: red;">*</span></label>
-                    <textarea id="updateKeterangan" name="keterangan" rows="4" required></textarea>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button id="updateSaveButton" type="button">Simpan</button>
-                <button id="updateCancelButton" type="button" class="close">Batal</button>
+    <div id="addModal" class="modal fade" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="addModalLabel">Tambah Jenis</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="tambahJenisForm">
+                        <div class="form-group">
+                            <label for="jenis">Jenis <span style="color: red;">*</span></label>
+                            <input type="text" class="form-control" id="jenis" name="jenis" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="keterangan">Keterangan <span style="color: red;">*</span></label>
+                            <textarea class="form-control" id="keterangan" name="keterangan" rows="4" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveButton" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Expand and Minimize Sidebar Menu-->
+    <!-- Edit Data Pop Up -->
+    <div id="editModal" class="modal fade" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="editModalLabel">Edit Jenis</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editJenisForm">
+                        <input type="hidden" id="editIdJenis" name="id_jenis">
+                        <div class="form-group">
+                            <label for="editJenis">Jenis <span style="color: red;">*</span></label>
+                            <input type="text" class="form-control" id="editJenis" name="jenis" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editKeterangan">Keterangan</label>
+                            <textarea class="form-control" id="editKeterangan" name="keterangan" rows="4" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="updateButton" class="btn btn-primary">Update</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+    <script>
+
     <script>
         const toggler = document.querySelector(".btn");
         toggler.addEventListener("click",function(){
         document.querySelector("#sidebar").classList.toggle("collapsed");
         });
-    </script>
+    </script>    
 
-    <!-- Show Entries from Database -->
     <script>
         $(document).ready(function() {
             // Fetch data from kelola_jenis_barang.php
@@ -359,7 +301,7 @@
                                 <td>${item.jenis}</td>
                                 <td>${item.keterangan}</td>
                                 <td>
-                                    <button class='btn btn-sm btn-primary btn-update'><i class='fas fa-edit'></i></button>
+                                    <button class='btn btn-sm btn-primary editButton' data-id='${item.id_jenis}' data-jenis='${item.jenis}' data-keterangan='${item.keterangan}'><i class='fas fa-edit'></i></button>
                                     <button class='btn btn-sm btn-danger'><i class='fas fa-trash'></i></button>
                                 </td>
                             </tr>
@@ -372,113 +314,76 @@
                     console.log('Error fetching data', error);
                 }
             });
+
+            // Show the modal for adding new entry
+            $('#addButton').click(function() {
+                $('#addModal').modal('show');
+            });
+
+            // Save new entry
+            $('#saveButton').click(function() {
+                const jenis = $('#jenis').val();
+                const keterangan = $('#keterangan').val();
+
+                $.ajax({
+                    url: 'php/kelola_jenis_barang.php',
+                    type: 'POST',
+                    data: {
+                        jenis: jenis,
+                        keterangan: keterangan
+                    },
+                    success: function(response) {
+                        // Reload the page or fetch the data again to show the new entry
+                        location.reload();
+                    },
+                    error: function(error) {
+                        console.log('Error adding data', error);
+                    }
+                });
+            });
+
+            // Show the modal for editing entry
+            $(document).on('click', '.editButton', function() {
+                const idJenis = $(this).data('id');
+                const jenis = $(this).data('jenis');
+                const keterangan = $(this).data('keterangan');
+
+                $('#editIdJenis').val(idJenis);
+                $('#editJenis').val(jenis);
+                $('#editKeterangan').val(keterangan);
+
+                $('#editModal').modal('show');
+            });
+
+            // Update entry
+            $('#updateButton').click(function() {
+                const idJenis = $('#editIdJenis').val();
+                const jenis = $('#editJenis').val();
+                const keterangan = $('#editKeterangan').val();
+
+                $.ajax({
+                    url: 'php/kelola_jenis_barang.php',
+                    type: 'POST',
+                    data: {
+                        id_jenis: idJenis,
+                        jenis: jenis,
+                        keterangan: keterangan
+                    },
+                    success: function(response) {
+                        // Reload the page or fetch the data again to show the updated entry
+                        location.reload();
+                    },
+                    error: function(error) {
+                        console.log('Error updating data', error);
+                    }
+                });
+            });
+
+            $('.close, .btn-secondary').click(function() {
+                $('#addModal').modal('hide');
+                $('#editModal').modal('hide');
+             });
         });
     </script>
-
-<!-- Pop Up Tambah Data -->
-<script>
-    $(document).ready(function() {
-        var modal = $('#addModal');
-
-        // Open modal on button click
-        $('#addButton').on('click', function() {
-            modal.show();
-        });
-
-        // Close modal on close button click or cancel button click
-        $('.close').on('click', function() {
-            modal.hide();
-        });
-
-        // Handle save button click
-        $('#saveButton').on('click', function() {
-            var jenis = $('#jenis').val();
-            var keterangan = $('#keterangan').val();
-
-            // Perform AJAX request to save data
-            $.ajax({
-                url: 'php/kelola_jenis_barang.php',
-                type: 'POST',
-                data: {
-                    jenis: jenis,
-                    keterangan: keterangan
-                },
-                success: function(response) {
-                    alert('Data berhasil disimpan');
-                    modal.hide();
-                    // Reload data or update the table
-                },
-                error: function(error) {
-                    console.log('Error:', error);
-                }
-            });
-        });
-
-        // Close modal if clicked outside of it
-        $(window).on('click', function(event) {
-            if (event.target == modal[0]) {
-                modal.hide();
-            }
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function() {
-        var updateModal = $('#updateModal');
-
-        // Open update modal on button click
-        $(document).on('click', '.btn-update', function() {
-            var row = $(this).closest('tr');
-            var kodeJenis = row.find('.kode-jenis').text();
-            var jenis = row.find('.jenis').text();
-            var keterangan = row.find('.keterangan').text();
-
-            $('#updateKodeJenis').val(kodeJenis);
-            $('#updateJenis').val(jenis);
-            $('#updateKeterangan').val(keterangan);
-
-            updateModal.show();
-        });
-
-        // Close update modal on close button click or cancel button click
-        $('.close').on('click', function() {
-            updateModal.hide();
-        });
-
-        // Handle update save button click
-        $('#updateSaveButton').on('click', function() {
-            var kodeJenis = $('#updateKodeJenis').val();
-            var jenis = $('#updateJenis').val();
-            var keterangan = $('#updateKeterangan').val();
-
-            // Perform AJAX request to update data
-            $.ajax({
-                url: 'php/kelola_jenis_barang.php',
-                type: 'POST',
-                data: {
-                    action: 'update',
-                    kodeJenis: kodeJenis,
-                    jenis: jenis,
-                    keterangan: keterangan
-                },
-                success: function(response) {
-                    alert('Data berhasil diupdate');
-                    updateModal.hide();
-                },
-                error: function(error) {
-                    console.log('Error:', error);
-                }
-            });
-        });
-
-        // Close modal if clicked outside of it
-        $(window).on('click', function(event) {
-            if (event.target == updateModal[0]) {
-                updateModal.hide();
-            }
-        });
-    });
-</script>
 </body>
 </html>
