@@ -223,7 +223,7 @@
                             <input type="text" class="form-control" id="jenis" name="jenis" required>
                         </div>
                         <div class="form-group">
-                            <label for="keterangan">Keterangan <span style="color: red;">*</span></label>
+                            <label for="keterangan">Keterangan</label>
                             <textarea class="form-control" id="keterangan" name="keterangan" rows="4" required></textarea>
                         </div>
                     </form>
@@ -274,7 +274,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
-    <script>
 
     <script>
         const toggler = document.querySelector(".btn");
@@ -282,12 +281,11 @@
         document.querySelector("#sidebar").classList.toggle("collapsed");
         });
     </script>    
-
     <script>
         $(document).ready(function() {
             // Fetch data from kelola_jenis_barang.php
             $.ajax({
-                url: 'php/kelola_jenis_barang.php',
+                url: 'php/read_jenis_barang.php',
                 type: 'GET',
                 success: function(response) {
                     // Parse JSON data
@@ -326,7 +324,7 @@
                 const keterangan = $('#keterangan').val();
 
                 $.ajax({
-                    url: 'php/kelola_jenis_barang.php',
+                    url: 'php/tambah_jenis_barang.php',
                     type: 'POST',
                     data: {
                         jenis: jenis,
@@ -362,9 +360,10 @@
                 const keterangan = $('#editKeterangan').val();
 
                 $.ajax({
-                    url: 'php/kelola_jenis_barang.php',
+                    url: 'php/update_jenis_barang.php',
                     type: 'POST',
                     data: {
+                        action: 'update',
                         id_jenis: idJenis,
                         jenis: jenis,
                         keterangan: keterangan

@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="styles/style.css">
     <title>Lavanderia Inventory System -  Admin Dashboard</title>
 </head>
-
 <body>
     <div class="wrapper">
         <!-- Sidebar -->
