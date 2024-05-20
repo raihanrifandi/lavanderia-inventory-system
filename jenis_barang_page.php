@@ -1,21 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lavanderia Inventory System - Jenis Barang</title>
-     <!-- Bootstrap JS and dependencies -->
-     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
-    <!-- Font Awesome for icons -->
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <!-- Font Awesome-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="stylesheet" href="styles/style.css">    
     <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="styles/style.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+</head>   
     <style>
         .table-wrapper {
             margin: 20px;
@@ -136,6 +142,7 @@
                 </ul>
             </div>
         </aside>
+
         <!-- Main Content -->
         <div class="main">
             <nav class="navbar navbar-expand px-3 border-bottom">
@@ -145,6 +152,8 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
             </nav>
+
+            <!-- Tables -->
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
@@ -154,23 +163,7 @@
                                 <button id="addButton" class="btn btn-primary">Tambah Data +</button>
                             </div>
                             <hr>
-                            <div class="d-flex justify-content-between mb-3">
-                                <div>
-                                    <label>Show 
-                                        <select name="entries" id="entries" class="custom-select custom-select-sm form-control form-control-sm">
-                                            <option value="5">5</option>
-                                            <option value="10">10</option>
-                                            <option value="25">25</option>
-                                            <option value="50">50</option>
-                                        </select> 
-                                        entries
-                                    </label>
-                                </div>
-                                <div>
-                                    <input type="text" id="search" class="form-control" placeholder="Search:">
-                                </div>
-                            </div>
-                            <table class="table table-bordered table-striped">
+                            <table id="jenisBarangTable" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>NO</th>
@@ -181,27 +174,13 @@
                                 </thead>
                                 <tbody id="jenisBarangTableBody">
                                 </tbody>
+                                <hr>
                             </table>
-                            <div class="d-flex justify-content-between">
-                                <div id="entriesInfo">Showing 1 to 3 of 3 entries</div>
-                                <div>
-                                    <nav>
-                                        <ul class="pagination pagination-sm">
-                                            <li class="page-item disabled">
-                                                <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                            </li>
-                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">Next</a>
-                                            </li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -267,50 +246,69 @@
         </div>
     </div>
 
-    <!-- jQuery and Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-        crossorigin="anonymous"></script>
+    <!-- Hapus Data Pop Up -->
+    <div id="deleteModal" class="modal fade" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-body">
+                    <i class="fa fa-circle-exclamation fa-3x text-warning mb-3"></i>
+                    <h4>Apakah Anda ingin menghapus <br> data ini?</h4>
+                    <button type="button" id="confirmDeleteButton" class="btn btn-danger mt-3">Iya</button>
+                    <button type="button" class="btn btn-secondary mt-3" data-dismiss="modal">Tidak</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+
+    <!-- jQuery and Bootstrap JS -->
     <script>
         const toggler = document.querySelector(".btn");
         toggler.addEventListener("click",function(){
         document.querySelector("#sidebar").classList.toggle("collapsed");
         });
     </script>    
+    <!-- Initialize DataTables -->
     <script>
         $(document).ready(function() {
-            // Fetch data from kelola_jenis_barang.php
-            $.ajax({
-                url: 'php/read_jenis_barang.php',
-                type: 'GET',
-                success: function(response) {
-                    // Parse JSON data
-                    const data = JSON.parse(response);
-                    // Populate table body
-                    const tbody = $('#jenisBarangTableBody');
-                    data.forEach((item, index) => {
-                        tbody.append(`
-                            <tr>
-                                <td>${index + 1}</td>
-                                <td>${item.jenis}</td>
-                                <td>${item.keterangan}</td>
-                                <td>
-                                    <button class='btn btn-sm btn-primary editButton' data-id='${item.id_jenis}' data-jenis='${item.jenis}' data-keterangan='${item.keterangan}'><i class='fas fa-edit'></i></button>
-                                    <button class='btn btn-sm btn-danger'><i class='fas fa-trash'></i></button>
-                                </td>
-                            </tr>
-                        `);
-                    });
-                    // Update entries info
-                    $('#entriesInfo').text(`Showing 1 to ${data.length} of ${data.length} entries`);
+            // Initialize DataTables
+            var table = $('#jenisBarangTable').DataTable({
+                "pageLength": 5,
+                "lengthMenu": [5, 10, 25, 50],
+                "searching": true,
+                "paging": true,
+                "info": true,
+                "ajax": {
+                    "url": "php/read_jenis_barang.php",
+                    "type": "GET",
+                    "dataSrc": ""
                 },
-                error: function(error) {
-                    console.log('Error fetching data', error);
+                "columns": [
+                    { "data": null, "render": function(data, type, row, meta) {
+                        return meta.row + 1;
+                    }},
+                    { "data": "jenis" },
+                    { "data": "keterangan" },
+                    { "data": null, "render": function(data, type, row) {
+                        return `
+                            <button class='btn btn-sm btn-primary editButton' data-id='${row.id_jenis}' data-jenis='${row.jenis}' data-keterangan='${row.keterangan}'><i class='fas fa-edit'></i></button>
+                            <button class='btn btn-sm btn-danger deleteButton' data-id='${row.id_jenis}'><i class='fas fa-trash'></i></button>
+                        `;
+                    }}
+                ],
+                "drawCallback": function(settings) {
+                    $('#entriesInfo').text(`Showing ${settings._iDisplayStart + 1} to ${settings._iDisplayStart + settings._iDisplayLength} of ${settings.fnRecordsDisplay()} entries`);
                 }
+            });
+
+            // Search functionality
+            $('#search').on('keyup', function() {
+                table.search(this.value).draw();
+            });
+
+            // Change number of entries to show
+            $('#entries').on('change', function() {
+                table.page.len(this.value).draw();
             });
 
             // Show the modal for adding new entry
@@ -331,8 +329,8 @@
                         keterangan: keterangan
                     },
                     success: function(response) {
-                        // Reload the page or fetch the data again to show the new entry
-                        location.reload();
+                        $('#addModal').modal('hide');
+                        table.ajax.reload(null, false);  // False to keep the current page
                     },
                     error: function(error) {
                         console.log('Error adding data', error);
@@ -369,8 +367,8 @@
                         keterangan: keterangan
                     },
                     success: function(response) {
-                        // Reload the page or fetch the data again to show the updated entry
-                        location.reload();
+                        $('#editModal').modal('hide');
+                        table.ajax.reload(null, false);  // False to keep the current page
                     },
                     error: function(error) {
                         console.log('Error updating data', error);
@@ -378,10 +376,35 @@
                 });
             });
 
+            let deleteId;
+            $(document).on('click', '.deleteButton', function() {
+                deleteId = $(this).data('id');
+                $('#deleteModal').modal('show');
+            });
+
+            // Confirm delete
+            $('#confirmDeleteButton').click(function() {
+                $.ajax({
+                    url: 'php/delete_jenis_barang.php',
+                    type: 'POST',
+                    data: {
+                        id_jenis: deleteId
+                    },
+                    success: function(response) {
+                        // Reload the page or fetch the data again to show the updated entry
+                        location.reload();
+                    },
+                    error: function(error) {
+                        console.log('Error deleting data', error);
+                    }
+                });
+            });
+
             $('.close, .btn-secondary').click(function() {
                 $('#addModal').modal('hide');
                 $('#editModal').modal('hide');
-             });
+                $('#deleteModal').modal('hide');
+            });
         });
     </script>
 </body>

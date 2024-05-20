@@ -22,3 +22,5 @@ $conn->close();
 
 // Return data as JSON
 echo json_encode($data);
+
+?>
