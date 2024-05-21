@@ -7,10 +7,13 @@
     <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="styles/style.css">
     <title>Lavanderia Inventory System -  Admin Dashboard</title>
 </head>
 <body>
+    <?php include 'php/card.php'; ?>
     <div class="wrapper">
         <!-- Sidebar -->
         <aside id="sidebar">
@@ -93,8 +96,40 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
             </nav>
+            <div class="row mt-5" style="margin-left: 2%; margin-right: 2%;">
+                    <div class="col-md-4 stretch-card grid-margin">
+                        <div class="card bg-gradient-info card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="assets/circle.svg" class="card-img-absolute" alt="circle-image" />
+                                <h4 class="font-weight-normal mb-3">Barang
+                                </h4>
+                                <h2 class="mb-5"><?php echo $total_barang; ?></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 stretch-card grid-margin">
+                        <div class="card bg-gradient-success card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="assets/circle.svg" class="card-img-absolute" alt="circle-image" />
+                                <h4 class="font-weight-normal mb-3">Barang Masuk
+                                </h4>
+                                <h2 class="mb-5"><?php echo $total_barang; ?></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-danger card-img-holder text-white">
+                        <div class="card-body">
+                            <img src="assets/circle.svg" class="card-img-absolute" alt="circle-image" />
+                            <h4 class="font-weight-normal mb-3">Barang Keluar
+                            </h4>
+                            <h2 class="mb-5"><?php echo $total_barang; ?></h2>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
@@ -105,5 +140,4 @@
         });
     </script>
 </body>
-
 </html>
