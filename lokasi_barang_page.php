@@ -11,7 +11,7 @@ if (!isset($_SESSION['username'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lavanderia Inventory System - Jenis Barang</title>
+    <title>Lavanderia Inventory System - Lokasi Barang</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="icon" href="assets/logo.png">
     <!-- Bootstrap CSS -->
@@ -37,7 +37,6 @@ if (!isset($_SESSION['username'])) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>   
     <style>
         .table-wrapper {
             margin: 20px;
@@ -46,7 +45,6 @@ if (!isset($_SESSION['username'])) {
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
         .btn-primary {
             background-color: #005BA7;
             border-color: #005BA7;
@@ -156,10 +154,10 @@ if (!isset($_SESSION['username'])) {
                         </a>
                         <ul id="dashboard" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
-                                <a href="transaksi_masuk.php" class="sidebar-link">Barang Masuk</a>
+                                <a href="transaksi-masuk.php" class="sidebar-link">Barang Masuk</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="transaksi_keluar.php" class="sidebar-link">Barang Keluar</a>
+                                <a href="transaksi-keluar.php" class="sidebar-link">Barang Keluar</a>
                             </li>
                         </ul>
                     </li>
@@ -174,7 +172,7 @@ if (!isset($_SESSION['username'])) {
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="php/logout.php" class="sidebar-link">
+                        <a href="index.php" class="sidebar-link">
                             <img src="assets/logout.png" style="margin-right: 5px;">
                             Logout
                         </a>
@@ -198,7 +196,7 @@ if (!isset($_SESSION['username'])) {
             <nav aria-label="breadcrumb" style="margin-top: 32px; margin-right: 18px">
                 <ol class="breadcrumb bg-transparent justify-content-end">
                     <li class="breadcrumb-item active"><a>Master Barang</a></li>
-                    <li class="breadcrumb-item active" aria-current="page" style="color: #2D8DFF;">Jenis</li>
+                    <li class="breadcrumb-item active" aria-current="page" style="color: #2D8DFF;">Lokasi</li>
                 </ol>
             </nav>
 
@@ -210,19 +208,20 @@ if (!isset($_SESSION['username'])) {
                     <div class="col-12">
                         <div class="table-wrapper">
                             <div class="table-header">
-                                <h3>Data Jenis Barang</h3>
+                                <h3>Data Lokasi Barang</h3>
                                 <button id="addButton" class="btn btn-primary">Tambah Data +</button>
                             </div>
-                            <table id="jenisBarangTable" class="table table-bordered table-striped">
+                        
+                            <table id="lokasiBarangTable" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>NO</th>
-                                        <th>JENIS</th>
+                                        <th>LOKASI</th>
                                         <th>KETERANGAN</th>
                                         <th>ACTION</th>
                                     </tr>
                                 </thead>
-                                <tbody id="jenisBarangTableBody">
+                                <tbody id="lokasiBarangTableBody">
                                 </tbody>
                                 <hr>
                             </table>
@@ -240,26 +239,26 @@ if (!isset($_SESSION['username'])) {
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2 class="modal-title" id="addModalLabel">Tambah Jenis</h2>
+                    <h2 class="modal-title" id="addModalLabel">Tambah Lokasi</h2>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="tambahJenisForm">
+                    <form id="tambahLokasiForm">
                         <div class="form-group">
-                            <label for="jenis">Jenis <span style="color: red;">*</span></label>
-                            <input type="text" class="form-control" id="jenis" name="jenis" required>
+                            <label for="nama_lokasi">Lokasi<span style="color: red;">*</span></label>
+                            <input type="text" id="nama_lokasi" name="nama_lokasi" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="keterangan">Keterangan<span style="color: red;">*</span></label>
-                            <textarea class="form-control" id="keterangan" name="keterangan" rows="4" required></textarea>
+                            <input type="text" id="keterangan" name="keterangan" class="form-control">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Tambah</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                         </div>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="saveButton" class="btn btn-primary">Simpan</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -270,27 +269,27 @@ if (!isset($_SESSION['username'])) {
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2 class="modal-title" id="editModalLabel">Edit Jenis</h2>
+                    <h2 class="modal-title" id="editModalLabel">Edit Lokasi</h2>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="editJenisForm">
-                        <input type="hidden" id="editIdJenis" name="id_jenis">
+                    <form id="editLokasiForm">
+                            <input type="hidden" id="editIdLokasi" name="id_lokasi">
                         <div class="form-group">
-                            <label for="editJenis">Jenis <span style="color: red;">*</span></label>
-                            <input type="text" class="form-control" id="editJenis" name="jenis" required>
+                            <label for="editLokasi">Lokasi:<span style="color: red;">*</span></label>
+                            <input type="text" id="editLokasi" name="lokasi" class="form-control" required>
                         </div>
                         <div class="form-group">
-                            <label for="editKeterangan">Keterangan</label>
-                            <textarea class="form-control" id="editKeterangan" name="keterangan" rows="4" required></textarea>
+                            <label for="editKeterangan">Keterangan:<span style="color: red;">*</span></label>
+                            <textarea id="editKeterangan" name="keterangan" class="form-control" required></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                         </div>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="updateButton" class="btn btn-primary">Update</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -311,25 +310,17 @@ if (!isset($_SESSION['username'])) {
     </div>
 
 
-    <!-- jQuery and Bootstrap JS -->
+    <!-- Include jQuery and DataTables JavaScript -->
     <script>
-        const toggler = document.querySelector(".btn");
-        toggler.addEventListener("click",function(){
-        document.querySelector("#sidebar").classList.toggle("collapsed");
-        });
-    </script>    
-    <!-- Initialize DataTables -->
-    <script>
-        $(document).ready(function() {
-            // Initialize DataTables
-            var table = $('#jenisBarangTable').DataTable({
+        $(document).ready(function () {
+            var table = $('#lokasiBarangTable').DataTable({
                 "pageLength": 5,
                 "lengthMenu": [5, 10, 25, 50],
                 "searching": true,
                 "paging": true,
                 "info": true,
                 "ajax": {
-                    "url": "php/read_jenis_barang.php",
+                    "url": "php/read_lokasi_barang.php",
                     "type": "GET",
                     "dataSrc": ""
                 },
@@ -337,12 +328,12 @@ if (!isset($_SESSION['username'])) {
                     { "data": null, "render": function(data, type, row, meta) {
                         return meta.row + 1;
                     }},
-                    { "data": "jenis" },
+                    { "data": "nama_lokasi" },
                     { "data": "keterangan" },
                     { "data": null, "render": function(data, type, row) {
                         return `
-                            <button class='btn btn-sm btn-primary editButton' data-id='${row.id_jenis}' data-jenis='${row.jenis}' data-keterangan='${row.keterangan}'><i class='fas fa-edit'></i></button>
-                            <button class='btn btn-sm btn-danger deleteButton' data-id='${row.id_jenis}'><i class='fas fa-trash'></i></button>
+                            <button class='btn btn-sm btn-primary editButton' data-id='${row.id_lokasi}' data-nama_lokasi='${row.nama_lokasi}' data-keterangan='${row.keterangan}'><i class='fas fa-edit'></i></button>
+                            <button class='btn btn-sm btn-danger deleteButton' data-id='${row.id_lokasi}'><i class='fas fa-trash'></i></button>
                         `;
                     }}
                 ],
@@ -367,15 +358,15 @@ if (!isset($_SESSION['username'])) {
             });
 
             // Save new entry
-            $('#saveButton').click(function() {
-                const jenis = $('#jenis').val();
+            $('#tambahLokasiForm').on('submit', function(event) {
+                const nama_lokasi = $('#nama_lokasi').val();
                 const keterangan = $('#keterangan').val();
 
                 $.ajax({
-                    url: 'php/tambah_jenis_barang.php',
+                    url: 'php/tambah_lokasi_barang.php',
                     type: 'POST',
                     data: {
-                        jenis: jenis,
+                        nama_lokasi: nama_lokasi,
                         keterangan: keterangan
                     },
                     success: function(response) {
@@ -383,10 +374,7 @@ if (!isset($_SESSION['username'])) {
                         Swal.fire({
                             title: 'Data Berhasil Disimpan',
                             icon: 'success',
-                            confirmButtonText: 'OK',
-                            customClass: {
-                                confirmButton: 'swal2-confirm'
-                            }
+                            confirmButtonText: 'OK'
                         });
                         table.ajax.reload(null, false);  // False to keep the current page
                     },
@@ -398,34 +386,30 @@ if (!isset($_SESSION['username'])) {
 
             // Show the modal for editing entry
             $(document).on('click', '.editButton', function() {
-                const idJenis = $(this).data('id');
-                const jenis = $(this).data('jenis');
+                const id_lokasi = $(this).data('id');
+                const nama_lokasi = $(this).data('nama_lokasi');
                 const keterangan = $(this).data('keterangan');
 
-                $('#editIdJenis').val(idJenis);
-                $('#editJenis').val(jenis);
+                $('#editIdLokasi').val(id_lokasi);
+                $('#editLokasi').val(nama_lokasi);
                 $('#editKeterangan').val(keterangan);
 
                 $('#editModal').modal('show');
             });
 
             // Update entry
-            $('#updateButton').click(function() {
-                const idJenis = $('#editIdJenis').val();
-                const jenis = $('#editJenis').val();
-                const keterangan = $('#editKeterangan').val();
-
-                console.log('ID:', idJenis); // Tambahkan log untuk debug, gapenting
-                console.log('Satuan:', jenis); // Tambahkan log untuk debug, gapenting
-                console.log('Keterangan:', keterangan); // Tambahkan log untuk debug, gapenting
+            $('#editLokasiForm').on('submit', function(event) {
+                const id_lokasi = $('#editIdLokasi').val();
+                const nama_lokasi = $('#editLokasi').val();
+                const keterangan = $('#editKeterangan').val();  
 
                 $.ajax({
-                    url: 'php/update_jenis_barang.php',
+                    url: 'php/update_lokasi_barang.php',
                     type: 'POST',
                     data: {
                         action: 'update',
-                        id_jenis: idJenis,
-                        jenis: jenis,
+                        id_lokasi: id_lokasi,
+                        nama_lokasi: nama_lokasi,
                         keterangan: keterangan
                     },
                     success: function(response) {
@@ -433,10 +417,7 @@ if (!isset($_SESSION['username'])) {
                         Swal.fire({
                             title: 'Perubahan Berhasil Disimpan',
                             icon: 'success',
-                            confirmButtonText: 'OK',
-                            customClass: {
-                                confirmButton: 'swal2-confirm'
-                            }
+                            confirmButtonText: 'OK'
                         });
                         table.ajax.reload(null, false);  // False to keep the current page
                     },
@@ -446,28 +427,24 @@ if (!isset($_SESSION['username'])) {
                 });
             });
 
+            // DELETE OPERATION BUTTON
             let deleteId;
             $(document).on('click', '.deleteButton', function() {
-                deleteId = $(this).data('id');
+                deleteId = $(this).data('id'); // Perhatikan disini ya kawan-kawanqu, 'id' ini tidak perlu diubah
                 $('#deleteModal').modal('show');
             });
 
-            // Confirm delete
+            // DELETE OPERATION LOGIC
             $('#confirmDeleteButton').click(function() {
                 $.ajax({
-                    url: 'php/delete_jenis_barang.php',
+                    url: 'php/delete_lokasi_barang.php',
                     type: 'POST',
                     data: {
-                        id_jenis: deleteId
+                        id_lokasi: deleteId
                     },
                     success: function(response) {
                         $('#deleteModal').modal('hide');
-                        Swal.fire({
-                            title: 'Data Berhasil Dihapus',
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        });
-                        table.ajax.reload(null, false);
+                        table.ajax.reload();
                     },
                     error: function(error) {
                         console.log('Error deleting data', error);
@@ -475,6 +452,7 @@ if (!isset($_SESSION['username'])) {
                 });
             });
 
+            // CLOSE POP UP
             $('.close, .btn-secondary').click(function() {
                 $('#addModal').modal('hide');
                 $('#editModal').modal('hide');
