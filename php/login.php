@@ -2,14 +2,16 @@
 include '../connection/conn.php';
 session_start();
 
-$form_username = $_POST['username'];
-$form_password = $_POST['password'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $form_username = $_POST['username'];
+    $form_password = $_POST['password'];
+}
+    $stmt = $conn->prepare("SELECT users.password, roles.nama_role FROM users JOIN roles ON users.role_id = roles.id WHERE users.username = ?");
+    $stmt->bind_param("s", $form_username);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($password, $role_name);
 
-$stmt = $conn->prepare("SELECT users.password, roles.nama_role FROM users JOIN roles ON users.role_id = roles.id WHERE users.username = ?");
-$stmt->bind_param("s", $form_username);
-$stmt->execute();
-$stmt->store_result();
-$stmt->bind_result($password, $role_name);
 
 if ($stmt->num_rows > 0) {
     $stmt->fetch();
