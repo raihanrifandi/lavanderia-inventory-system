@@ -323,8 +323,7 @@ while ($row = mysqli_fetch_assoc($lokasiResult)) {
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                         </div>
                     </form>
-                </div>
-                
+                </div> 
             </div>
         </div>
     </div>

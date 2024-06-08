@@ -16,8 +16,6 @@
     <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <!-- DataTables Buttons CSS -->
     <link href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.bootstrap5.min.css" rel="stylesheet">
-    <!-- SweetAlert2 CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- Font Awesome-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="styles/style.css">    
@@ -39,8 +37,6 @@
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.colVis.min.js"></script>
-    <!-- SweetAlert2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .table-wrapper {
             margin: 20px;
@@ -115,6 +111,19 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
+        .date-filter-container {
+            display: flex;
+            align-items: center;
+        }
+        .date-filter-container input[type="date"] {
+            padding: 5px;
+            margin: 0 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .dataTables_wrapper .dt-buttons {
+            margin-right: 20px;
+        }
     </style>
 </head>
 <body>
@@ -185,7 +194,7 @@
             <!-- Breadcrumb -->
             <nav aria-label="breadcrumb" style="margin-top: 32px; margin-right: 18px">
                 <ol class="breadcrumb bg-transparent justify-content-end">
-                    <li class="breadcrumb-item active"><a>Transaksi</a></li>
+                    <li class="breadcrumb-item active"><a>Laporan</a></li>
                     <li class="breadcrumb-item active" aria-current="page" style="color: #2D8DFF;">Barang Keluar</li>
                 </ol>
             </nav>
@@ -197,6 +206,15 @@
                         <div class="table-wrapper">
                             <div class="table-header">
                                 <h3>Data Barang Keluar</h3>
+                            </div>
+                            <br>
+                            <div class="date-filter-container">
+                                <label for="startDate" style="margin-top: 10px">Start Date:</label>
+                                <input type="date" id="startDate" name="startDate">
+                                <label for="endDate" style="margin-top: 10px">End Date:</label>
+                                <input type="date" id="endDate" name="endDate">
+                                <button id="filterButton" class="btn btn-primary">Filter</button>
+                                <button id="resetButton" class="btn btn-secondary" style="margin-left: 4px">Reset</button>
                             </div>
                             <hr>
                             <table id="barangKeluarTable" class="table table-bordered table-striped">
@@ -233,6 +251,10 @@
             "ajax": {
                 "url": "php/transaksi/keluar/read.php",
                 "type": "GET",
+                "data": function(d) {
+                    d.startDate = $('#startDate').val();
+                    d.endDate = $('#endDate').val();
+                },
                 "dataSrc": "",
                 "error": function (jqXHR, textStatus, errorThrown) {
                     console.error('Error fetching data:', textStatus, errorThrown);
@@ -277,6 +299,15 @@
                     }
                 }
             ]
+        });
+        $('#filterButton').click(function() {
+             table.ajax.reload();
+        });
+
+        $('#resetButton').click(function() {
+            $('#startDate').val('');
+            $('#endDate').val('');
+            table.ajax.reload();
         });
     });
 </script>

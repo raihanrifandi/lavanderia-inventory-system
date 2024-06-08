@@ -2,6 +2,9 @@
 include '../../../connection/conn.php';
 session_start();
 
+$startDate = isset($_GET['startDate']) ? $_GET['startDate'] : '';
+$endDate = isset($_GET['endDate']) ? $_GET['endDate'] : '';
+
 $sql = "SELECT 
             bm.tanggal_masuk, 
             bm.id_transaksi, 
@@ -11,6 +14,10 @@ $sql = "SELECT
             bm.keterangan 
         FROM transaksi_barang_masuk bm 
         JOIN barang b ON bm.id_barang = b.id_barang";
+
+if (!empty($startDate) && !empty($endDate)) {
+    $sql .= " WHERE bm.tanggal_masuk BETWEEN '$startDate' AND '$endDate'";
+}
 
 $result = $conn->query($sql);
 
