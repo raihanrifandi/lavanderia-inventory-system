@@ -8,12 +8,15 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
-$barangResult = mysqli_query($conn, "SELECT id_barang, nama_barang FROM barang");
+$barangResult = mysqli_query($conn, "SELECT b.id_barang, b.nama_barang, s.satuan, jb.jenis, l.nama_lokasi
+    FROM barang b
+    JOIN satuan_barang s ON b.id_satuan = s.id_satuan
+    JOIN jenis_barang jb ON b.id_jenis = jb.id_jenis
+    JOIN lokasi_barang l ON b.id_lokasi = l.id_lokasi");
 $barangOptions = [];
 while ($row = mysqli_fetch_assoc($barangResult)) {
     $barangOptions[] = $row;
 }
-
 
 ?>
 
@@ -310,7 +313,12 @@ while ($row = mysqli_fetch_assoc($barangResult)) {
                         <select id="kodeBarang" class="form-control" required>
                             <option value="">-- Pilih --</option>
                             <?php foreach ($barangOptions as $barang) { ?>
-                                <option value="<?php echo $barang['id_barang']; ?>"><?php echo $barang['id_barang'] ?></option>
+                                <option value="<?php echo $barang['id_barang']; ?>"     
+                                        data-nama-barang="<?php echo $barang['nama_barang']; ?>" 
+                                        data-satuan="<?php echo $barang['satuan']; ?>"
+                                        data-jenis="<?php echo $barang['jenis']; ?>"
+                                        data-lokasi="<?php echo $barang['nama_lokasi']; ?>">
+                                    <?php echo $barang['id_barang'] ?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -502,6 +510,22 @@ while ($row = mysqli_fetch_assoc($barangResult)) {
             $('#idTransaksi').val(generatedID);
             $.ajax({
         });
+    });
+
+    $('#kodeBarang').on('change', function() {
+            // Ambil data dari opsi yang dipilih
+            var selectedOption = $(this).find('option:selected');
+            var namaBarang = selectedOption.data('nama-barang');
+            var satuan = selectedOption.data('satuan');
+            var jenis = selectedOption.data('jenis');
+            var lokasi = selectedOption.data('lokasi');
+            console.log(namaBarang);
+            
+            // Setel nilai pada nama barang, jenis barang, satuan barang, dan lokasi barang.
+            $('#namaBarang').val(namaBarang);
+            $('#jenisBarang').val(jenis);
+            $('#satuanBarang').val(satuan);
+            $('#lokasiBarang').val(lokasi);
     });
 
     // CREATE OPERATION LOGIC
