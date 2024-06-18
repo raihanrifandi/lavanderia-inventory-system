@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $jumlah_keluar = $_POST['jumlah_keluar'];
     $keterangan = $_POST['keterangan'];
 
-    if (!empty($id_transaksi) && !empty($id_barang) && !empty($tanggal_keluar) && !empty($jumlah_keluar)) {
+    if (!empty($id_transaksi) && !empty($id_barang) && !empty($tanggal_keluar) && isset($jumlah_keluar)) {
         // Ambil stok_awal dari database berdasarkan id_barang
         $stmt_stock = $conn->prepare("SELECT stok_awal FROM barang WHERE id_barang = ?");
         $stmt_stock->bind_param("s", $id_barang);
@@ -28,15 +28,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $jumlah_keluar_sebelumnya = $row_prev['jumlah_keluar'];
                 $stmt_prev->close();
 
-                // Periksa apakah jumlah barang yang keluar melebihi stok awal
-                if ($jumlah_keluar > $stok_awal) {
-                    echo json_encode(["error" => "Jumlah barang keluar melebihi stok awal"]);
+                // Hitung selisih jumlah_keluar dengan jumlah_keluar_sebelumnya
+                $selisih_jumlah_keluar = $jumlah_keluar - $jumlah_keluar_sebelumnya;
+
+                // Periksa apakah jumlah barang yang keluar melebihi stok awal setelah perubahan
+                if ($jumlah_keluar > $stok_awal + $selisih_jumlah_keluar) {
+                    echo json_encode(["error" => "Jumlah barang keluar melebihi stok awal setelah perubahan"]);
                 } else {
                     // Update data transaksi barang keluar
                     $stmt_update_trans = $conn->prepare("UPDATE transaksi_barang_keluar SET tanggal_keluar = ?, jumlah_keluar = ?, keterangan = ? WHERE id_transaksi = ?");
                     $stmt_update_trans->bind_param("siss", $tanggal_keluar, $jumlah_keluar, $keterangan, $id_transaksi);
                     if ($stmt_update_trans->execute()) {
-                        echo json_encode(["message" => "Data berhasil diupdate"]);
+                        // Update stok_awal barang di tabel barang
+                        $new_stok_awal = $stok_awal - $selisih_jumlah_keluar;
+                        $stmt_update_barang = $conn->prepare("UPDATE barang SET stok_awal = ? WHERE id_barang = ?");
+                        $stmt_update_barang->bind_param("is", $new_stok_awal, $id_barang);
+                        if ($stmt_update_barang->execute()) {
+                            echo json_encode(["message" => "Data berhasil diupdate"]);
+                        } else {
+                            echo json_encode(["error" => "Gagal mengupdate stok barang"]);
+                        }
+                        $stmt_update_barang->close();
                     } else {
                         echo json_encode(["error" => "Gagal mengupdate data transaksi"]);
                     }

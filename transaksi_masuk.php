@@ -625,17 +625,33 @@ while ($row = mysqli_fetch_assoc($barangResult)) {
                     keterangan: keterangan
                 },
                 success: function(response) {
+                var data = JSON.parse(response);
+                if (data.error) {
+                    Swal.fire({
+                    title: 'Error',
+                    text: data.error,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                } else {
                     $('#editModal').modal('hide');
                     Swal.fire({
-                        title: 'Perubahan Berhasil Disimpan',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
+                    title: 'Data Berhasil Disimpan',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
                     });
-                    table.ajax.reload(null, false);
-                },
-                error: function(error) {
-                    console.log('Error updating data', error);
-                }
+                        $('#barangMasukTable').DataTable().ajax.reload();
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error:', textStatus, errorThrown);
+                        Swal.fire({
+                            title: 'Error',
+                            text: textStatus + ': ' + errorThrown,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
             });
         });
 
