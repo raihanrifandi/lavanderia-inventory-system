@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'owner') {
     header("Location: index.php");
     exit();
 }
@@ -21,6 +21,12 @@ if (!isset($_SESSION['username'])) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <title>Lavanderia Inventory System -  Owner Dashboard</title>
     <link rel="icon" href="assets/logo.png">
+    <style type="text/css">
+        .sidebar-link:hover {
+            background-color: #2D8DFF;
+            color: #ffffff !important;
+        }
+    </style>
 </head>
 <body>
     <?php include 'php/card.php'; ?>
@@ -37,8 +43,8 @@ if (!isset($_SESSION['username'])) {
                         MENU
                     </li>
                     <li class="sidebar-item">
-                        <a href="#" class="sidebar-link" style="color: #2D8DFF;">
-                            <img src="assets/dash.png" style="margin-right: 5px; ">
+                        <a href="#" class="sidebar-link" style="color: white; background-color: #2D8DFF;">
+                            <img src="assets/dash-w.png" style="margin-right: 5px; width: 18px;">
                             Dashboard
                         </a>
                     </li>
@@ -62,7 +68,7 @@ if (!isset($_SESSION['username'])) {
                         OTHER
                     </li>
                     <li class="sidebar-item">
-                        <a href="#" class="sidebar-link">
+                        <a href="about-owner.html" class="sidebar-link">
                             <img src="assets/about.png" style="margin-right: 5px;">
                             About us
                         </a>
@@ -78,13 +84,28 @@ if (!isset($_SESSION['username'])) {
         </aside>
         <!-- Main Component -->
         <div class="main" style="background-color: #F5F6F8">
-            <nav class="navbar navbar-expand px-2  border-bottom" style="background-color: #fff; padding-bottom: 20px;">
+            <nav class="navbar navbar-expand px-3 border-bottom" style="background-color: #fff; padding-bottom: 15px;">
                 <!-- Button for sidebar toggle -->
                 <button class="btn" type="button" data-bs-theme="dark">
                     <span class="navbar-toggler-icon">
-                    	<i class="bi bi-list" style="font-size: 30px; margin-top: 0;"></i>
+                        <i class="bi bi-list" style="font-size: 30px; margin-top: 0;"></i>
                     </span>
                 </button>
+                <!-- Profile dropdown menu -->
+                <div class="ms-auto profile-dropdown">
+                    <div class="dropdown">
+                        <button class="btn dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="assets/pp.jpg" alt="Profile Avatar" class="rounded-circle" width="30" height="30">
+                            <?php echo $_SESSION['username']; ?>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="php/logout.php">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
             </nav>
             <div class="row mt-5" style="margin-left: 2%; margin-right: 2%;">
                     <div class="col-md-4 stretch-card grid-margin">
@@ -101,7 +122,7 @@ if (!isset($_SESSION['username'])) {
                         <div class="card bg-gradient-success card-img-holder text-white">
                             <div class="card-body">
                                 <img src="assets/circle.svg" class="card-img-absolute" alt="circle-image" />
-                                <h4 class="font-weight-normal mb-3">Barang Masuk
+                                <h4 class="font-weight-normal mb-3">Satuan Barang
                                 </h4>
                                 <h2 class="mb-5"><?php echo $total_barang_masuk; ?></h2>
                             </div>
@@ -111,7 +132,7 @@ if (!isset($_SESSION['username'])) {
                     <div class="card bg-gradient-danger card-img-holder text-white">
                         <div class="card-body">
                             <img src="assets/circle.svg" class="card-img-absolute" alt="circle-image" />
-                            <h4 class="font-weight-normal mb-3">Barang Keluar
+                            <h4 class="font-weight-normal mb-3">Lokasi Barang
                             </h4>
                             <h2 class="mb-5"><?php echo $total_barang_keluar; ?></h2>
                         </div>
@@ -128,6 +149,25 @@ if (!isset($_SESSION['username'])) {
         toggler.addEventListener("click",function(){
         document.querySelector("#sidebar").classList.toggle("collapsed");
         });
+
+        $('.sidebar-item a[href="php/logout.php"]').on('click', function(event) {
+            event.preventDefault(); // Mencegah aksi default (redirect)
+            Swal.fire({
+                title: 'Apakah Anda yakin akan keluar?',
+                text: "Anda akan keluar dari akun Anda.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'php/logout.php';
+                }
+            });
+        });
     </script>
+
 </body>
 </html>

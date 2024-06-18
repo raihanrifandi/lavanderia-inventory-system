@@ -1,9 +1,20 @@
 <?php
+
+include 'connection/conn.php';
+
 session_start();
 if (!isset($_SESSION['username'])) {
     header("Location: index.php");
     exit();
 }
+
+$barangResult = mysqli_query($conn, "SELECT id_barang, nama_barang FROM barang");
+$barangOptions = [];
+while ($row = mysqli_fetch_assoc($barangResult)) {
+    $barangOptions[] = $row;
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -98,6 +109,10 @@ if (!isset($_SESSION['username'])) {
         .modal-footer button {
             margin-left: 10px;
         }
+        .sidebar-link:hover {
+            background-color: #2D8DFF;
+            color: #ffffff !important;
+        }
 
         input[type="text"],
         textarea {
@@ -125,7 +140,7 @@ if (!isset($_SESSION['username'])) {
                         MENU
                     </li>
                     <li class="sidebar-item">
-                        <a href="dashboard_admin.php" class="sidebar-link" style="color: #2D8DFF;">
+                        <a href="dashboard_admin.php" class="sidebar-link">
                             <img src="assets/dash.png" style="margin-right: 5px; ">
                             Dashboard
                         </a>
@@ -157,9 +172,9 @@ if (!isset($_SESSION['username'])) {
                             <img src="assets/transaksi.png" style="margin-right: 5px;">
                             Transaksi
                         </a>
-                        <ul id="dashboard" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <ul id="dashboard" class="sidebar-dropdown list-unstyled" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
-                                <a href="transaksi_masuk.php" class="sidebar-link">Barang Masuk</a>
+                                <a href="transaksi_masuk.php" class="sidebar-link" style="color: white; background-color: #2D8DFF;">Barang Masuk</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="transaksi_keluar.php" class="sidebar-link">Barang Keluar</a>
@@ -171,7 +186,7 @@ if (!isset($_SESSION['username'])) {
                         OTHER
                     </li>
                     <li class="sidebar-item">
-                        <a href="#" class="sidebar-link">
+                        <a href="about.html" class="sidebar-link">
                             <img src="assets/aboutUs.png" style="margin-right: 5px;">
                             About us
                         </a>
@@ -188,19 +203,35 @@ if (!isset($_SESSION['username'])) {
 
         <!-- Main Content -->
         <div class="main" style="background-color: #F5F6F8">
-            <nav class="navbar navbar-expand px-3 border-bottom" style="background-color: #fff">
+            <nav class="navbar navbar-expand px-3 border-bottom" style="background-color: #fff; padding-bottom: 15px;">
                 <!-- Button for sidebar toggle -->
                 <button class="btn" type="button" data-bs-theme="dark">
                     <span class="navbar-toggler-icon">
                         <i class="bi bi-list" style="font-size: 30px; margin-top: 0;"></i>
                     </span>
                 </button>
+                <!-- Profile dropdown menu -->
+                <div class="ms-auto profile-dropdown" style="margin-left: 80%;">
+                    <div class="dropdown">
+                        <button class="btn dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="assets/pp.jpg" alt="Profile Avatar" class="rounded-circle" width="30" height="30">
+                            <?php echo $_SESSION['username']; ?>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="php/logout.php">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
             </nav>
 
             <!-- Breadcrumb -->
-            <nav aria-label="breadcrumb" style="margin-top: 32px; margin-right: 18px">
-                <ol class="breadcrumb bg-transparent justify-content-end">
-                    <li class="breadcrumb-item active"><a>Transaksi</a></li>
+            <nav aria-label="breadcrumb" style="margin-top: 32px; margin-right: 18px; margin-left: 18px;">
+                <ol class="breadcrumb bg-transparent">
+                    <li style="font-weight: bold;">Barang Masuk</li>
+                    <li class="breadcrumb-item active justify-content-end" style="margin-left:72%;"><a>Transaksi</a></li>
                     <li class="breadcrumb-item active" aria-current="page" style="color: #2D8DFF;">Barang Masuk</li>
                 </ol>
             </nav>
@@ -239,7 +270,7 @@ if (!isset($_SESSION['username'])) {
 
         <!-- The Modal -->
         <!-- Tambah Data Pop Up -->
-        <<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="tambahBarangMasukModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="tambahBarangMasukModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
             <div class="modal-header">
@@ -274,9 +305,14 @@ if (!isset($_SESSION['username'])) {
                 <!-- Layout kanan -->
                 <div class="col-md-6">
                     <form>
-                    <div class="mb-1">
-                        <label for="kodeBarang" class="form-label">Kode Barang<span style="color: red;">*</span></label>
-                        <input type="text" class="form-control" id="kodeBarang">
+                    <div class="mb-1 form-group">
+                        <label for="kodeBarang" class="form-label">Kode Barang<span style="color: red;">*</span></label><br>
+                        <select id="kodeBarang" class="form-control" required>
+                            <option value="">-- Pilih --</option>
+                            <?php foreach ($barangOptions as $barang) { ?>
+                                <option value="<?php echo $barang['id_barang']; ?>"><?php echo $barang['id_barang'] ?></option>
+                            <?php } ?>
+                        </select>
                     </div>
                     <div class="mb-1">
                         <label for="namaBarang" class="form-label">Nama Barang</label>
@@ -307,7 +343,7 @@ if (!isset($_SESSION['username'])) {
         </div>
 
         <!-- Edit Data Pop Up -->
-        <<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editBarangMasukModalLabel" aria-hidden="true">
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editBarangMasukModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
             <div class="modal-header">
@@ -342,10 +378,12 @@ if (!isset($_SESSION['username'])) {
                 <!-- Layout kanan -->
                 <div class="col-md-6">
                     <form>
-                    <div class="mb-1">
-                        <label for="editKodeBarang" class="form-label">Kode Barang<span style="color: red;">*</span></label>
-                        <input type="text" class="form-control" id="editKodeBarang">
-                    </div>
+                    <label for="editKodeBarang" class="form-label">Kode Barang<span style="color: red;">*</span></label>
+                    <select class="form-control" id="editIdBarang" name="id_barang" required>
+                        <?php foreach ($barangOptions as $barang) { ?>
+                            <option value="<?php echo $barang['id_barang']; ?>"><?php echo $barang['id_barang']; ?></option>
+                        <?php } ?>
+                    </select>
                     <div class="mb-1">
                         <label for="editNamaBarang" class="form-label">Nama Barang</label>
                         <input type="text" readonly class="form-control" id="editNamaBarang">
@@ -436,11 +474,34 @@ if (!isset($_SESSION['username'])) {
         }
     });
 
+    $('#kodeBarang').on('change', function() {
+        var idBarang = $(this).val(); 
+        $.ajax({
+            url: 'php/barang/fetch_barang.php', 
+            type: 'GET',
+            data: { id_barang: idBarang },
+            success: function(response) {
+                console.log(response); // Lihat data yang diterima
+                var data = JSON.parse(response);
+                $('#namaBarang').val(data.nama_barang);
+                $('#satuanBarang').val(data.satuan);
+                $('#jenisBarang').val(data.jenis);
+                $('#lokasiBarang').val(data.lokasi);
+            },
+            error: function(error) {
+                console.log('Error fetching barang data', error);
+            }
+        });
+    });
+
+
     // CREATE OPERATION BUTTON
     $('#addButton').on('click', function () {
             $('#addModal').modal('show');
             const generatedID = generateID();
             $('#idTransaksi').val(generatedID);
+            $.ajax({
+        });
     });
 
     // CREATE OPERATION LOGIC
@@ -487,10 +548,29 @@ if (!isset($_SESSION['username'])) {
         });
     });
 
+    // Fetch data from the row
+    const idBarang = $(this).data('id_barang');
+    const idTransaksi = $(this).data('id');
+    const tanggal = $(this).data('tanggal');
+    const jumlah = $(this).data('jumlah_masuk');
+    const keterangan = $(this).data('keterangan');
+
+    // Set values in the edit form
+    $('#editIdTransaksi').val(idTransaksi);
+    $('#editTanggalMasuk').val(tanggal);
+    $('#editJumlahMasuk').val(jumlah);
+    $('#editKeterangan').val(keterangan);
+
+    // Populate ID barang dropdown
+    $('#editIdBarang').val('');
+    $('#editIdBarang option').filter(function() {
+        return $(this).val() == idBarang;
+    }).prop('selected', true);
+
     $('#kodeBarang').on('change', function() {
         var idBarang = $(this).val(); 
         $.ajax({
-            url: 'php/barang/fetch_barang.php', 
+            url: 'php/transaksi/masuk/fetch_barang.php', 
             type: 'GET',
             data: {
                 id_barang: idBarang
@@ -509,25 +589,28 @@ if (!isset($_SESSION['username'])) {
     });
 
     $(document).on('click', '.editButton', function() {
-            const idBarang = $(this).data('id_barang');
-            const idTransaksi = $(this).data('id');
-            const tanggal = $(this).data('tanggal');
-            const jumlah = $(this).data('jumlah_masuk');
-            const keterangan = $(this).data('keterangan');
-            $('#editKodeBarang').val(idBarang);
-            $('#editIdTransaksi').val(idTransaksi);
-            $('#editTanggalMasuk').val(tanggal);
-            $('#editJumlahMasuk').val(jumlah);
-            $('#editKeterangan').val(keterangan);
-            $('#editModal').modal('show');
-            console.log(idBarang);
+        const idTransaksi = $(this).data('id');
+        const tanggal = $(this).data('tanggal');
+        const jumlah = $(this).data('jumlah_masuk');
+        const keterangan = $(this).data('keterangan');
+        
+        // Set nilai kolom-kolom pada modal edit
+        $('#editIdTransaksi').val(idTransaksi);
+        $('#editTanggalMasuk').val(tanggal);
+        $('#editJumlahMasuk').val(jumlah);
+        $('#editKeterangan').val(keterangan);
+        
+        // Atur opsi dropdown id barang sebagai selected value
+        const idBarang = $(this).data('id_barang');
+        $('#editIdBarang').val(idBarang); // Ubah properti 'selected' opsi dropdown id barang
+        $('#editModal').modal('show');
     });
 
         // UPDATE OPERATION LOGIC
         $('#updateButton').click(function() {
             var idTransaksi = $('#editIdTransaksi').val();
             var tanggalMasuk = $('#editTanggalMasuk').val();
-            var idBarang = $('#editKodeBarang').val();
+            var idBarang = $('#editIdBarang').val(); // Ubah pemanggilan idBarang agar sesuai dengan id dropdown edit
             var jumlahMasuk = $('#editJumlahMasuk').val();
             var keterangan = $('#editKeterangan').val();
             $.ajax({
@@ -536,7 +619,7 @@ if (!isset($_SESSION['username'])) {
                 data: {
                     action: 'update',
                     id_transaksi: idTransaksi,
-                    id_barang: idBarang,
+                    id_barang: idBarang, // Perbaiki parameter yang dikirimkan agar sesuai dengan id dropdown edit
                     tanggal_masuk: tanggalMasuk,
                     jumlah_masuk: jumlahMasuk,
                     keterangan: keterangan
@@ -592,6 +675,24 @@ if (!isset($_SESSION['username'])) {
         $('#addModal').modal('hide');
         $('#editModal').modal('hide');
         $('#deleteModal').modal('hide');
+    });
+
+    $('.sidebar-item a[href="php/logout.php"]').on('click', function(event) {
+        event.preventDefault(); // Mencegah aksi default (redirect)
+        Swal.fire({
+            title: 'Apakah Anda yakin akan keluar?',
+            text: "Anda akan keluar dari akun Anda.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'php/logout.php';
+            }
+        });
     });
 });
 </script>

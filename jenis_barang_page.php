@@ -95,6 +95,10 @@ if (!isset($_SESSION['username'])) {
         .modal-footer button {
             margin-left: 10px;
         }
+        .sidebar-link:hover {
+            background-color: #2D8DFF;
+            color: #ffffff !important;
+        }
 
         input[type="text"],
         textarea {
@@ -122,8 +126,8 @@ if (!isset($_SESSION['username'])) {
                         MENU
                     </li>
                     <li class="sidebar-item">
-                        <a href="dashboard_admin.php" class="sidebar-link" style="color: #2D8DFF;">
-                            <img src="assets/dash.png" style="margin-right: 5px; ">
+                        <a href="dashboard_admin.php" class="sidebar-link">
+                            <img src="assets/dash.png" style="width: 18px; margin-right: 5px; ">
                             Dashboard
                         </a>
                     </li>
@@ -133,9 +137,9 @@ if (!isset($_SESSION['username'])) {
                             <img src="assets/master.png" style="margin-right: 5px;">
                             Master Barang
                         </a>
-                        <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <ul id="pages" class="sidebar-dropdown list-unstyled" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
-                                <a href="jenis_barang_page.php" class="sidebar-link">Jenis</a>
+                                <a href="jenis_barang_page.php" class="sidebar-link"  style="color: white; background-color: #2D8DFF;">Jenis</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="satuan_barang_page.php" class="sidebar-link">Satuan</a>
@@ -168,7 +172,7 @@ if (!isset($_SESSION['username'])) {
                         OTHER
                     </li>
                     <li class="sidebar-item">
-                        <a href="#" class="sidebar-link">
+                        <a href="about.html" class="sidebar-link">
                             <img src="assets/aboutUs.png" style="margin-right: 5px;">
                             About us
                         </a>
@@ -185,19 +189,35 @@ if (!isset($_SESSION['username'])) {
 
         <!-- Main Content -->
         <div class="main" style="background-color: #F5F6F8">
-            <nav class="navbar navbar-expand px-3 border-bottom" style="background-color: #fff">
+            <nav class="navbar navbar-expand px-3 border-bottom" style="background-color: #fff; padding-bottom: 15px;">
                 <!-- Button for sidebar toggle -->
                 <button class="btn" type="button" data-bs-theme="dark">
                     <span class="navbar-toggler-icon">
                         <i class="bi bi-list" style="font-size: 30px; margin-top: 0;"></i>
                     </span>
                 </button>
+                <!-- Profile dropdown menu -->
+                <div class="ms-auto profile-dropdown" style="margin-left: 80%;">
+                    <div class="dropdown">
+                        <button class="btn dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="assets/pp.jpg" alt="Profile Avatar" class="rounded-circle" width="30" height="30">
+                            <?php echo $_SESSION['username']; ?>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="php/logout.php">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
             </nav>
 
             <!-- Breadcrumb -->
-            <nav aria-label="breadcrumb" style="margin-top: 32px; margin-right: 18px">
-                <ol class="breadcrumb bg-transparent justify-content-end">
-                    <li class="breadcrumb-item active"><a>Master Barang</a></li>
+            <nav aria-label="breadcrumb" style="margin-top: 32px; margin-right: 18px; margin-left: 18px;">
+                <ol class="breadcrumb bg-transparent">
+                    <li style="font-weight: bold;">Jenis Barang</li>
+                    <li class="breadcrumb-item active justify-content-end" style="margin-left:76%;"><a>Master Barang</a></li>
                     <li class="breadcrumb-item active" aria-current="page" style="color: #2D8DFF;">Jenis</li>
                 </ol>
             </nav>
@@ -252,7 +272,7 @@ if (!isset($_SESSION['username'])) {
                             <input type="text" class="form-control" id="jenis" name="jenis" required>
                         </div>
                         <div class="form-group">
-                            <label for="keterangan">Keterangan<span style="color: red;">*</span></label>
+                            <label for="keterangan">Keterangan</label>
                             <textarea class="form-control" id="keterangan" name="keterangan" rows="4" required></textarea>
                         </div>
                     </form>
@@ -279,6 +299,7 @@ if (!isset($_SESSION['username'])) {
                     <form id="editJenisForm">
                         <input type="hidden" id="editIdJenis" name="id_jenis">
                         <div class="form-group">
+                           
                             <label for="editJenis">Jenis <span style="color: red;">*</span></label>
                             <input type="text" class="form-control" id="editJenis" name="jenis" required>
                         </div>
@@ -286,13 +307,12 @@ if (!isset($_SESSION['username'])) {
                             <label for="editKeterangan">Keterangan</label>
                             <textarea class="form-control" id="editKeterangan" name="keterangan" rows="4" required></textarea>
                         </div>
+                        <div class="modal-footer">
+                            <button type="button" id="updateButton" class="btn btn-primary">Update</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" id="updateButton" class="btn btn-primary">Update</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -321,6 +341,7 @@ if (!isset($_SESSION['username'])) {
     <!-- Initialize DataTables -->
     <script>
         $(document).ready(function() {
+            $('.sidebar-link.collapsed').trigger('click');
             // Initialize DataTables
             var table = $('#jenisBarangTable').DataTable({
                 "pageLength": 5,
@@ -479,6 +500,23 @@ if (!isset($_SESSION['username'])) {
                 $('#addModal').modal('hide');
                 $('#editModal').modal('hide');
                 $('#deleteModal').modal('hide');
+            });
+            $('.sidebar-item a[href="php/logout.php"]').on('click', function(event) {
+                event.preventDefault(); // Mencegah aksi default (redirect)
+                Swal.fire({
+                    title: 'Apakah Anda yakin akan keluar?',
+                    text: "Anda akan keluar dari akun Anda.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Tidak'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'php/logout.php';
+                    }
+                });
             });
         });
     </script>

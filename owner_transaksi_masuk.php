@@ -1,3 +1,14 @@
+<?php
+include 'connection/conn.php';
+
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,6 +27,8 @@
     <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <!-- DataTables Buttons CSS -->
     <link href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.bootstrap5.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- Font Awesome-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="styles/style.css">    
@@ -37,6 +50,8 @@
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.colVis.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .table-wrapper {
             margin: 20px;
@@ -98,6 +113,7 @@
             margin-left: 10px;
         }
         .sidebar-link:hover {
+            background-color: #2D8DFF;
             color: #ffffff !important;
         }
         @media print {
@@ -117,19 +133,6 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
-        .date-filter-container {
-            display: flex;
-            align-items: center;
-        }
-        .date-filter-container input[type="date"] {
-            padding: 5px;
-            margin: 0 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .dataTables_wrapper .dt-buttons {
-            margin-right: 20px;
-        }
     </style>
 </head>
 <body>
@@ -146,8 +149,8 @@
                         MENU
                     </li>
                     <li class="sidebar-item">
-                        <a href="dashboard_owner.php" class="sidebar-link" style="color: #2D8DFF;">
-                            <img src="assets/dash.png" style="margin-right: 5px; ">
+                        <a href="dashboard_owner.php" class="sidebar-link">
+                            <img src="assets/dash.png" style="margin-right: 5px; width: 18px;">
                             Dashboard
                         </a>
                     </li>
@@ -157,9 +160,9 @@
                             <img src="assets/laporan.png" style="margin-right: 5px;">
                             Laporan
                         </a>
-                        <ul id="dashboard" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <ul id="dashboard" class="sidebar-dropdown list-unstyled" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
-                                <a href="owner_transaksi_masuk.php" class="sidebar-link">Barang Masuk</a>
+                                <a href="owner_transaksi_masuk.php" class="sidebar-link" style="background-color: #2D8DFF; color: #ffffff !important;">Barang Masuk</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="owner_transaksi_keluar.php" class="sidebar-link">Barang Keluar</a>
@@ -171,7 +174,7 @@
                         OTHER
                     </li>
                     <li class="sidebar-item">
-                        <a href="#" class="sidebar-link">
+                        <a href="about-owner.html" class="sidebar-link">
                             <img src="assets/aboutUs.png" style="margin-right: 5px;">
                             About us
                         </a>
@@ -188,19 +191,35 @@
 
         <!-- Main Content -->
         <div class="main" style="background-color: #F5F6F8">
-            <nav class="navbar navbar-expand px-3 border-bottom" style="background-color: #fff">
+            <nav class="navbar navbar-expand px-3 border-bottom" style="background-color: #fff; padding-bottom: 15px;">
                 <!-- Button for sidebar toggle -->
                 <button class="btn" type="button" data-bs-theme="dark">
                     <span class="navbar-toggler-icon">
                         <i class="bi bi-list" style="font-size: 30px; margin-top: 0;"></i>
                     </span>
                 </button>
+                <!-- Profile dropdown menu -->
+                <div class="ms-auto profile-dropdown" style="margin-left: 80%;">
+                    <div class="dropdown">
+                        <button class="btn dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="assets/pp.jpg" alt="Profile Avatar" class="rounded-circle" width="30" height="30">
+                            <?php echo $_SESSION['username']; ?>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="php/logout.php">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
             </nav>
 
             <!-- Breadcrumb -->
-            <nav aria-label="breadcrumb" style="margin-top: 32px; margin-right: 18px">
-                <ol class="breadcrumb bg-transparent justify-content-end">
-                    <li class="breadcrumb-item active"><a>Laporan</a></li>
+            <nav aria-label="breadcrumb" style="margin-top: 32px; margin-right: 18px; margin-left: 18px;">
+                <ol class="breadcrumb bg-transparent">
+                    <li style="font-weight: bold;">Barang Masuk</li>
+                    <li class="breadcrumb-item active justify-content-end" style="margin-left:72%;"><a>Laporan</a></li>
                     <li class="breadcrumb-item active" aria-current="page" style="color: #2D8DFF;">Barang Masuk</li>
                 </ol>
             </nav>
