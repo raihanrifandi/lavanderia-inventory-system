@@ -2,19 +2,31 @@
 include '../../../connection/conn.php';
 session_start();
 
-$id_barang = isset($_GET['id_barang']) ? $_GET['id_barang'] : die();
+if (isset($_GET['id_barang'])) {
+    $idBarang = $_GET['id_barang'];
 
-$query = "SELECT barang.nama_barang, jenis.jenis, satuan.satuan, lokasi.nama_lokasi 
+    // Query untuk mengambil detail barang beserta nama satuan, jenis, dan lokasi
+    $query = "SELECT barang.nama_barang, satuan.satuan, jenis.jenis, lokasi.nama_lokasi 
               FROM barang 
-              INNER JOIN jenis ON barang.id_jenis = jenis.id_jenis
-              INNER JOIN satuan ON barang.id_satuan = satuan.id_satuan
-              INNER JOIN lokasi ON barang.id_lokasi = lokasi.id_lokasi
+              JOIN satuan ON barang.id_satuan = satuan.id_satuan 
+              JOIN jenis ON barang.id_jenis = jenis.id_jenis 
+              JOIN lokasi ON barang.id_lokasi = lokasi.id_lokasi 
               WHERE barang.id_barang = :id_barang";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':id_barang', $id_barang);
-$stmt->execute();
+    
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':id_barang', $idBarang, PDO::PARAM_INT);
+    $stmt->execute();
 
-$barang = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Ambil hasil query
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-echo json_encode($barang);
+    if ($result) {
+        // Kembalikan hasil dalam format JSON
+        echo json_encode($result);
+    } else {
+        echo json_encode(['error' => 'Barang tidak ditemukan']);
+    }
+} else {
+    echo json_encode(['error' => 'ID barang tidak diberikan']);
+}
 ?>

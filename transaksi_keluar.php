@@ -384,31 +384,35 @@ while ($row = mysqli_fetch_assoc($barangResult)) {
                 </div>
                 <!-- Layout kanan -->
                 <div class="col-md-6">
-                    <form>
-                    <div class="mb-1 form-group">
+                <form>
                         <label for="editKodeBarang" class="form-label">Kode Barang<span style="color: red;">*</span></label>
-                        <select class="form-control" id="editIdBarang" name="id_barang" required>
+                        <select class="form-control" id="editIdBarang" readonly name="id_barang" required>
                             <?php foreach ($barangOptions as $barang) { ?>
-                                <option value="<?php echo $barang['id_barang']; ?>"><?php echo $barang['id_barang']; ?></option>
+                                <option value="<?php echo $barang['id_barang']; ?>"
+                                        data-nama-barang="<?php echo $barang['nama_barang']; ?>" 
+                                        data-satuan="<?php echo $barang['satuan']; ?>"
+                                        data-jenis="<?php echo $barang['jenis']; ?>"
+                                        data-lokasi="<?php echo $barang['nama_lokasi']; ?>">
+                                    <?php echo $barang['id_barang']; ?>
+                                </option>
                             <?php } ?>
                         </select>
-                    </div>
-                    <div class="mb-1">
-                        <label for="editNamaBarang" class="form-label">Nama Barang</label>
-                        <input type="text" readonly class="form-control" id="editNamaBarang">
-                    </div>
-                    <div class="mb-1">
-                        <label for="editSatuanBarang" class="form-label">Satuan</label>
-                        <input type="text" readonly class="form-control" id="editSatuanBarang">
-                    </div>
-                    <div class="mb-1">
-                        <label for="editJenisBarang" class="form-label">Jenis</label>
-                        <input type="text" readonly class="form-control" id="editJenisBarang">
-                    </div>
-                    <div class="mb-1">
-                        <label for="editLokasiBarang" readonly class="form-label">Lokasi</label>
-                        <input type="text" readonly class="form-control" id="editLokasiBarang">
-                    </div>
+                        <div class="mb-1">
+                            <label for="editNamaBarang" class="form-label">Nama Barang</label>
+                            <input type="text" readonly class="form-control" id="editNamaBarang">
+                        </div>
+                        <div class="mb-1">
+                            <label for="editSatuanBarang" class="form-label">Satuan</label>
+                            <input type="text" readonly class="form-control" id="editSatuanBarang">
+                        </div>
+                        <div class="mb-1">
+                            <label for="editJenisBarang" class="form-label">Jenis</label>
+                            <input type="text" readonly class="form-control" id="editJenisBarang">
+                        </div>
+                        <div class="mb-1">
+                            <label for="editLokasiBarang" class="form-label">Lokasi</label>
+                            <input type="text" readonly class="form-control" id="editLokasiBarang">
+                        </div>
                     </form>
                 </div>
                 </div>
@@ -437,6 +441,30 @@ while ($row = mysqli_fetch_assoc($barangResult)) {
     </div>
         
 <!-- jQuery and DataTables Scripts -->
+<script>
+    // Function to update form values based on selected barang
+    function updateFormValues() {
+        var selectedOption = document.getElementById('editIdBarang').options[document.getElementById('editIdBarang').selectedIndex];
+        
+        document.getElementById('editNamaBarang').value = selectedOption.getAttribute('data-nama-barang');
+        document.getElementById('editSatuanBarang').value = selectedOption.getAttribute('data-satuan');
+        document.getElementById('editJenisBarang').value = selectedOption.getAttribute('data-jenis');
+        document.getElementById('editLokasiBarang').value = selectedOption.getAttribute('data-lokasi');
+    }
+
+    // Add event listener to dropdown change event
+    document.getElementById('editIdBarang').addEventListener('change', updateFormValues);
+
+    // Function to reset form values when modal is shown
+    $('#editModal').on('show.bs.modal', function () {
+        // Reset form values based on selected barang
+        updateFormValues();
+    });
+
+    // Trigger change event on page load to set default values
+    document.getElementById('editIdBarang').dispatchEvent(new Event('change'));
+</script>
+
 <script>
     $(document).ready(function() {
     var table = $('#barangKeluarTable').DataTable({

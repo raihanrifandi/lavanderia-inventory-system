@@ -406,7 +406,7 @@ while ($row = mysqli_fetch_assoc($lokasiResult)) {
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="button" id="updateButton" class="btn btn-primary">Update</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                 </div>
             </div>
@@ -544,15 +544,30 @@ while ($row = mysqli_fetch_assoc($lokasiResult)) {
             console.log(jenis_barang);
             // Show the modal
             $('#editModal').modal('show');
-        });
+        });
 
-        // Handle form submission for editing entry
-        $('#editBarangForm').on('submit', function (event) {
-            event.preventDefault();
-            
-            // Create a FormData object
-            var formData = new FormData(this);
-            
+        $('#updateButton').click(function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Fetch form data
+            var id_barang = $('#editIdBarang').val();
+            var nama_barang = $('#editNamaBarang').val();
+            var harga = $('#editHarga').val();
+            var gambar = $('#editGambar')[0].files[0]; // Get file object
+            var jenis_barang = $('#editJenisBarang').val();
+            var satuan_barang = $('#editSatuanBarang').val();
+            var lokasi_barang = $('#editLokasiBarang').val();
+
+            // Prepare form data to send via AJAX
+            var formData = new FormData();
+            formData.append('id_barang', id_barang);
+            formData.append('nama_barang', nama_barang);
+            formData.append('harga', harga);
+            formData.append('gambar', gambar);
+            formData.append('jenis_barang', jenis_barang);
+            formData.append('satuan_barang', satuan_barang);
+            formData.append('lokasi_barang', lokasi_barang);
+
             $.ajax({
                 url: 'php/update_barang.php',
                 method: 'POST',
@@ -567,7 +582,7 @@ while ($row = mysqli_fetch_assoc($lokasiResult)) {
                         icon: 'success',
                         confirmButtonText: 'OK'
                     });
-                    table.ajax.reload();
+                    table.ajax.reload(); // Reload DataTable after successful update
                 },
                 error: function (response) {
                     alert('Failed to update data.');
@@ -575,6 +590,7 @@ while ($row = mysqli_fetch_assoc($lokasiResult)) {
                 }
             });
         });
+
 
         // DELETE OPERATION BUTTON
         let deleteId;
@@ -593,11 +609,34 @@ while ($row = mysqli_fetch_assoc($lokasiResult)) {
                     id_barang: deleteId
                 },
                 success: function(response) {
-                    $('#deleteModal').modal('hide');
-                    table.ajax.reload();
+                    var data = JSON.parse(response);
+
+                    if (data.error) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.error,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        $('#deleteModal').modal('hide');
+                        Swal.fire({
+                            title: 'Data Berhasil Dihapus',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            table.ajax.reload();
+                        });
+                    }
                 },
-                error: function(error) {
-                    console.log('Error deleting data', error);
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error:', textStatus, errorThrown);
+                    Swal.fire({
+                        title: 'Error',
+                        text: textStatus + ': ' + errorThrown,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 }
             });
         });

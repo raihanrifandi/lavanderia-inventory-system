@@ -386,30 +386,35 @@ while ($row = mysqli_fetch_assoc($barangResult)) {
                 <!-- Layout kanan -->
                 <div class="col-md-6">
                     <form>
-                    <label for="editKodeBarang" class="form-label">Kode Barang<span style="color: red;">*</span></label>
-                    <select class="form-control" id="editIdBarang" name="id_barang" required>
-                        <?php foreach ($barangOptions as $barang) { ?>
-                            <option value="<?php echo $barang['id_barang']; ?>"><?php echo $barang['id_barang']; ?></option>
-                        <?php } ?>
-                    </select>
-                    <div class="mb-1">
-                        <label for="editNamaBarang" class="form-label">Nama Barang</label>
-                        <input type="text" readonly class="form-control" id="editNamaBarang">
-                    </div>
-                    <div class="mb-1">
-                        <label for="editSatuanBarang" class="form-label">Satuan</label>
-                        <input type="text" readonly class="form-control" id="editSatuanBarang">
-                    </div>
-                    <div class="mb-1">
-                        <label for="editJenisBarang" class="form-label">Jenis</label>
-                        <input type="text" readonly class="form-control" id="editJenisBarang">
-                    </div>
-                    <div class="mb-1">
-                        <label for="editLokasiBarang" readonly class="form-label">Lokasi</label>
-                        <input type="text" readonly class="form-control" id="editLokasiBarang">
-                    </div>
+                        <label for="editKodeBarang" class="form-label">Kode Barang<span style="color: red;">*</span></label>
+                        <select class="form-control" id="editIdBarang" readonly name="id_barang" required>
+                            <?php foreach ($barangOptions as $barang) { ?>
+                                <option value="<?php echo $barang['id_barang']; ?>"
+                                        data-nama-barang="<?php echo $barang['nama_barang']; ?>" 
+                                        data-satuan="<?php echo $barang['satuan']; ?>"
+                                        data-jenis="<?php echo $barang['jenis']; ?>"
+                                        data-lokasi="<?php echo $barang['nama_lokasi']; ?>">
+                                    <?php echo $barang['id_barang']; ?>
+                                </option>
+                            <?php } ?>
+                        </select>
+                        <div class="mb-1">
+                            <label for="editNamaBarang" class="form-label">Nama Barang</label>
+                            <input type="text" readonly class="form-control" id="editNamaBarang">
+                        </div>
+                        <div class="mb-1">
+                            <label for="editSatuanBarang" class="form-label">Satuan</label>
+                            <input type="text" readonly class="form-control" id="editSatuanBarang">
+                        </div>
+                        <div class="mb-1">
+                            <label for="editJenisBarang" class="form-label">Jenis</label>
+                            <input type="text" readonly class="form-control" id="editJenisBarang">
+                        </div>
+                        <div class="mb-1">
+                            <label for="editLokasiBarang" class="form-label">Lokasi</label>
+                            <input type="text" readonly class="form-control" id="editLokasiBarang">
+                        </div>
                     </form>
-                </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -436,6 +441,31 @@ while ($row = mysqli_fetch_assoc($barangResult)) {
     </div>
         
 <!-- jQuery and DataTables Scripts -->
+<script>
+    // Function to update form values based on selected barang
+    function updateFormValues() {
+        var selectedOption = document.getElementById('editIdBarang').options[document.getElementById('editIdBarang').selectedIndex];
+        
+        document.getElementById('editNamaBarang').value = selectedOption.getAttribute('data-nama-barang');
+        document.getElementById('editSatuanBarang').value = selectedOption.getAttribute('data-satuan');
+        document.getElementById('editJenisBarang').value = selectedOption.getAttribute('data-jenis');
+        document.getElementById('editLokasiBarang').value = selectedOption.getAttribute('data-lokasi');
+    }
+
+    // Add event listener to dropdown change event
+    document.getElementById('editIdBarang').addEventListener('change', updateFormValues);
+
+    // Function to reset form values when modal is shown
+    $('#editModal').on('show.bs.modal', function () {
+        // Reset form values based on selected barang
+        updateFormValues();
+    });
+
+    // Trigger change event on page load to set default values
+    document.getElementById('editIdBarang').dispatchEvent(new Event('change'));
+</script>
+
+
 <script>
     $(document).ready(function() {
     var table = $('#barangMasukTable').DataTable({
@@ -591,6 +621,32 @@ while ($row = mysqli_fetch_assoc($barangResult)) {
         return $(this).val() == idBarang;
     }).prop('selected', true);
 
+    $(document).ready(function() {
+        $('#editIdBarang').on('change', function() {
+            var idBarang = $(this).val(); // Ambil ID barang dari nilai yang dipilih
+
+            // Lakukan request AJAX
+            $.ajax({
+                url: 'php/transaksi/masuk/fetch_barang.php', // URL ke script PHP yang mengambil data barang
+                type: 'GET',
+                data: { id_barang: idBarang }, // Kirim ID barang sebagai parameter GET
+                success: function(response) {
+                    console.log(response); // Tampilkan data yang diterima di console (untuk debugging)
+                    var data = JSON.parse(response); // Parse response JSON menjadi objek JavaScript
+
+                    // Isi nilai input fields pada form edit
+                    $('#editNamaBarang').val(data.nama_barang);
+                    $('#editSatuanBarang').val(data.satuan);
+                    $('#editJenisBarang').val(data.jenis);
+                    $('#editLokasiBarang').val(data.nama_lokasi);
+                },
+                error: function(error) {
+                    console.log('Error fetching barang data', error); // Tangani error jika terjadi
+                }
+            });
+        });
+    });
+
     $('#kodeBarang').on('change', function() {
         var idBarang = $(this).val(); 
         $.ajax({
@@ -681,7 +737,7 @@ while ($row = mysqli_fetch_assoc($barangResult)) {
 
     // DELETE OPERATION BUTTON
     let deleteId;
-        $(document).on('click', '.deleteButton', function() {
+    $(document).on('click', '.deleteButton', function() {
             deleteId = $(this).data('id'); // Perhatikan disini ya kawan-kawanqu, 'id' ini tidak perlu diubah
             $('#deleteModal').modal('show');
     });
